@@ -1,7 +1,7 @@
 <?php
 /**
  * GET /api_externa/redsalud.php
- * Devuelve todos los registros de la tabla redsalud.
+ * Devuelve registros de redsalud unidos con clientesredsalud por numero.
  *
  * Query opcionales:
  *   - limit  (int)  máximo de filas
@@ -24,22 +24,29 @@ try {
     $offset = isset($_GET['offset']) ? max(0, (int)$_GET['offset']) : 0;
     $order  = strtolower($_GET['order'] ?? 'desc') === 'asc' ? 'ASC' : 'DESC';
 
-    $total = (int)$pdo->query('SELECT COUNT(*) FROM redsalud')->fetchColumn();
+    $join = "FROM redsalud r
+             LEFT JOIN clientesredsalud c
+               ON r.numero COLLATE utf8mb4_unicode_ci = c.numero";
+
+    $total = (int)$pdo->query("SELECT COUNT(*) {$join}")->fetchColumn();
 
     $sql = "SELECT
-                id,
-                nombre,
-                numero,
-                conversacion,
-                categoria_cliente,
-                horario,
-                presupuesto,
-                obs,
-                agente_id,
-                fecha_creacion,
-                fecha_actualizacion
-            FROM redsalud
-            ORDER BY fecha_creacion {$order}";
+                r.id,
+                r.nombre,
+                r.numero,
+                r.conversacion,
+                r.categoria_cliente,
+                r.horario,
+                r.presupuesto,
+                r.obs,
+                r.agente_id,
+                r.fecha_creacion,
+                r.fecha_actualizacion,
+                c.id AS cliente_id,
+                c.nombre AS cliente_nombre,
+                c.sucursal AS cliente_sucursal
+            {$join}
+            ORDER BY r.fecha_creacion {$order}";
 
     if ($limit !== null) {
         $sql .= ' LIMIT ' . $limit . ' OFFSET ' . $offset;
@@ -49,7 +56,8 @@ try {
 
     apiJson([
         'success' => true,
-        'table'   => 'redsalud',
+        'tables'  => ['redsalud', 'clientesredsalud'],
+        'join'    => 'r.numero = c.numero',
         'total'   => $total,
         'count'   => count($data),
         'limit'   => $limit,

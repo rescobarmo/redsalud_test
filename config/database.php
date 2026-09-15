@@ -9,6 +9,8 @@ if (file_exists($envFile)) {
             $key = trim($key);
             $value = trim($value);
             putenv("$key=$value");
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
         }
     }
 }

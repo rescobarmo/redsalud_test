@@ -23,14 +23,20 @@ function apiJson(array $payload, int $status = 200): void
     exit;
 }
 
+function apiEnv(string $key, string $default = ''): string
+{
+    $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
+    return ($value === false || $value === null || $value === '') ? $default : (string)$value;
+}
+
 function apiRequireKey(): void
 {
-    $expected = getenv('EXTERNAL_API_KEY') ?: '';
+    $expected = apiEnv('EXTERNAL_API_KEY');
 
     if ($expected === '') {
         apiJson([
             'success' => false,
-            'error'   => 'EXTERNAL_API_KEY no está configurada en el servidor (.env)',
+            'error'   => 'EXTERNAL_API_KEY no está configurada. Agrégala en EasyPanel (Environment) o en docker-compose.yml / .env',
         ], 500);
     }
 

@@ -9,3 +9,4 @@ services:
       DB_NAME: marketing
       DB_USER: rsr
       DB_PASS: N@v3gador
+      EXTERNAL_API_KEY: rsr-externa-415749
