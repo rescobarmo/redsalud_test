@@ -42,8 +42,8 @@ try {
                 r.obs,
                 r.monto,
                 r.fecha_creacion,
-                r.fecha_actualizacion,
-            {$tabla}
+                r.fecha_actualizacion
+            {$tabla} 
             ORDER BY r.fecha_creacion {$order}";
 
     if ($limit !== null) {
