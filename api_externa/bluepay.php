@@ -27,7 +27,7 @@ try {
     /*$join = "FROM redsalud r
              LEFT JOIN clientesredsalud c
                ON r.numero COLLATE utf8mb4_unicode_ci = c.numero";*/
-    $tabla = "FROM bluepay";
+    $tabla = "FROM Bluepay";
 
     $total = (int)$pdo->query("SELECT COUNT(*) {$tabla}")->fetchColumn();
 
@@ -54,7 +54,7 @@ try {
 
     apiJson([
         'success' => true,
-        'tables'  => ['redsalud', 'clientesredsalud'],
+        'table'  => ['Bluepay'],
         'join'    => 'r.numero = c.numero',
         'total'   => $total,
         'count'   => count($data),
