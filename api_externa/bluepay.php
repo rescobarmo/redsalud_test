@@ -27,7 +27,7 @@ try {
     /*$join = "FROM redsalud r
              LEFT JOIN clientesredsalud c
                ON r.numero COLLATE utf8mb4_unicode_ci = c.numero";*/
-    $tabla = "FROM Bluepay";
+    $tabla = "FROM Bluepay r";
 
     $total = (int)$pdo->query("SELECT COUNT(*) {$tabla}")->fetchColumn();
 
